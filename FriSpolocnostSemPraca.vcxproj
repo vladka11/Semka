@@ -170,6 +170,7 @@
     <ClInclude Include="structure.h" />
     <ClInclude Include="structure_iterator.h" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="Vozidlo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Den.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Sklad.cpp" />
     <ClCompile Include="structure.cpp" />
     <ClCompile Include="vector.cpp" />
+    <ClCompile Include="Vozidlo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

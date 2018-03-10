@@ -8,6 +8,9 @@ class Biofarmar
 public:
 	Biofarmar(string obchodnyNazov, bool zemiaky, bool olej, bool ochucovadla);
 	string getObchodnyNazov();
+	bool getZemiaky();
+	bool getOlej();
+	bool getOchucovadla();
 	~Biofarmar();
 
 

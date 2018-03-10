@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include "Sklad.h"
+#include "Den.h"
 #include "heap_monitor.h"
 
 using namespace std;
@@ -27,10 +28,11 @@ bool konverziaIntToBool(int cislo) {
 }
 void main()
 {
-	//initHeapMonitor();
+	//initHeapMonitor(); 
 	Sklad * sklad = new Sklad();
+	Den * den = new Den(1);
 
-	while (true) {
+	while (1) {
 		cout << "----------------------------------------\n \t\t MENU \n----------------------------------------\n";
 		cout << "1. Pridaj noveho biofarmara \n";
 		cout << "2. Vypis zoznam biofarmarov v abecednom poradi \n";
@@ -40,8 +42,8 @@ void main()
 
 		cout << "\n-----Nacitavenie z txt-------" << endl;
 		cout << "|90. Nacitaj biofarmarov       |" << endl;
-		cout << "|92. Nacitaj dodavatelov z txt |" << endl;
-		cout << "|93. Nacitaj vozidla z txt     |" << endl;
+		cout << "|91. Nacitaj vozidla           |" << endl;
+		cout << "|92. Nacitaj vozidla z txt     |" << endl;
 		cout << "--------------------------------" << endl;
 		int vyber;
 		cin >> vyber;
@@ -74,15 +76,40 @@ void main()
 			break;
 		}
 		case 2: {
-			sklad->vypisBiofarmarov();
+			int volba;
+			cout << "Volba 2: Výpis biofarmárov \n----------------------------------------\n" << endl;
+			cout << "Vyber moznost pre vypisanie:" << endl;
+			cout << "1: vypis vsetkych biofarmarov" << endl;
+			cout << "2. vypis dodavatelov oleja" << endl;
+			cout << "3. vypis dodavatelov zemiakov" << endl;
+			cout << "4. vypis dodavatelov ochucovadiel" << endl;
+			cin >> volba;
+
+			sklad->vypisUrcitychBiofarmarov(volba);
+
 			break;
 		}
 		case 3: {
-			cout << "vybral si si 3" << endl;
+			string spz;
+			int typVozidla;
+			int nosnost;
+			cout << "Volba 2: Pridanie noveho vozidla \n----------------------------------------\n" << endl;
+			cout << "Zadaj spz vozidla: " << endl;
+			cin >> spz;
+			cout << "Co bude vozidlo rozvazat? 1 = Lupienky, 2 = Hranolceky" << endl;
+			cin >> typVozidla;
+			if (typVozidla == 1) {
+				nosnost = 2;
+			}else {
+				nosnost = 5;
+			}
+			sklad->pridajVozidlo(new Vozidlo(spz, typVozidla, nosnost, 0, new Den(den->getDen())));
+			
 			break;
 		}
 		case 4: {
-			cout << "vybral si si 4" << endl;
+			cout << "Volba 4: Vypis vsetkych vozidiel \n----------------------------------------\n" << endl;
+			sklad->vypisVozidla();
 			break;
 		}
 
@@ -100,6 +127,23 @@ void main()
 			suborBiofarmarov.close();
 			cout << "Biofarmari boli uspesne nacitani. " << endl;
 			break;
+		}
+
+		case 91: {
+			string spz;
+			int typ, nosnost, naklady, datum;
+			ifstream suborVozidiel("vozidla.txt");
+			string riadok;
+
+			if (suborVozidiel.is_open()) {
+				while (suborVozidiel >> spz >> typ >> nosnost >> naklady >> datum) {
+					sklad->pridajVozidlo(new Vozidlo(spz,typ,nosnost,naklady, new Den(datum)));
+				}
+			}
+			suborVozidiel.close();
+			cout << "Vozidla boli uspesne nacitane. " << endl;
+			break;
+
 		}
 
 		case 0: {

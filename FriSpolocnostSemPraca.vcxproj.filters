@@ -87,6 +87,9 @@
     <ClInclude Include="Sklad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Vozidlo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ds_routines.cpp">
@@ -111,6 +114,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sklad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vozidlo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

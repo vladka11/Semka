@@ -1,4 +1,5 @@
 #include "Biofarmar.h"
+#include "heap_monitor.h"
 #include <string>
 
 
@@ -9,6 +10,21 @@ Biofarmar::Biofarmar(string obchodnyNazov, bool zemiaky, bool olej, bool ochucov
 
 string Biofarmar::getObchodnyNazov() {
 	return obchodnyNazov_;
+}
+
+bool Biofarmar::getZemiaky()
+{
+	return zemiaky_;
+}
+
+bool Biofarmar::getOlej()
+{
+	return olej_;
+}
+
+bool Biofarmar::getOchucovadla()
+{
+	return ochucovadla_;
 }
 
 Biofarmar::~Biofarmar()

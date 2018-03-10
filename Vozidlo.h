@@ -12,34 +12,20 @@ class Vozidlo
 {
 private:
 	string spz_;
-	int opotrebovanie_;
+	int typVozidla_; // 1 = Lupienky, 2 = Hranolceky
 	int nosnost_;
-	Den* datZaciokEvid_;											//datum zaèiatku evidencie vozidla	
-	ExplicitStack<Paleta*>* paletyVoVozidle_;
+	int naklady_;
+	Den *datZaradeniaDoEvid_;
+
 
 public:
-	Vozidlo(string spz, int opotrebovanost,int nosnost, Den* denZaciatkuEvid);
-	ExplicitStack<Paleta*>* getPaletyVoVozidle();
-
-	Paleta * vylozPaletu();
-
-	bool nalozPaletu(Paleta * paleta);
-
-	Paleta * ukazPaletu();
-	
-	void vratenieVozidla();
-	void prevzatiePaliet();
-	string getSpz();
-	void setSpz(string spz);
-	int getOpotrebovanost();
-	void setOpotrebovanost(int opotrebovanost);
-	int getNosnost();
-	void setNosnost(int nosnost);
-	Den* getDenZaciatkuEvid();
-	void setDenZaciatkuEvid(Den* datum);
+	Vozidlo(string spz, int typ, int nosnost, int naklady, Den * datumEvid);
 	~Vozidlo();
-
-
-
+	string getSpz();
+	int getTypVozidla();
+	int getNosnost();
+	int getNaklady();
+	Den *getDatumZaciatkuEvidencie();
+	
 };
 
