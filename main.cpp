@@ -38,12 +38,13 @@ void main()
 		cout << "2. Vypis zoznam biofarmarov v abecednom poradi \n";
 		cout << "3. Pridaj nove vozidlo  \n";
 		cout << "4. Vypis zoznam vozidiel podla datumu zaradenia do evidencie \n";
+		cout << "5. Pridaj noveho zakaznika \n";
 
 
 		cout << "\n-----Nacitavenie z txt-------" << endl;
 		cout << "|90. Nacitaj biofarmarov       |" << endl;
 		cout << "|91. Nacitaj vozidla           |" << endl;
-		cout << "|92. Nacitaj vozidla z txt     |" << endl;
+		//cout << "|92. Nacitaj vozidla z txt     |" << endl;
 		cout << "--------------------------------" << endl;
 		int vyber;
 		cin >> vyber;
@@ -71,8 +72,14 @@ void main()
 			cin >> ochucovadla;
 			if (kontrolaCisla(ochucovadla) == false) { break; }
 
-			sklad->pridajBiofarmara(new Biofarmar(nazovSpolocnosti, konverziaIntToBool(zemiaky),konverziaIntToBool(olej), konverziaIntToBool(ochucovadla)));
-			cout << "Biofarmar bol uspesne pridany" << endl;
+			if (sklad->skontrolujNazovBiofarmara(nazovSpolocnosti)) {
+				sklad->pridajBiofarmara(new Biofarmar(nazovSpolocnosti, konverziaIntToBool(zemiaky), konverziaIntToBool(olej), konverziaIntToBool(ochucovadla)));
+				cout << "Biofarmar bol uspesne pridany" << endl;
+			}
+			else {
+				cout << "Biofarmar uz exituje." << endl;
+			}
+			
 			break;
 		}
 		case 2: {
@@ -83,6 +90,7 @@ void main()
 			cout << "2. vypis dodavatelov oleja" << endl;
 			cout << "3. vypis dodavatelov zemiakov" << endl;
 			cout << "4. vypis dodavatelov ochucovadiel" << endl;
+
 			cin >> volba;
 
 			sklad->vypisUrcitychBiofarmarov(volba);
@@ -103,13 +111,39 @@ void main()
 			}else {
 				nosnost = 5;
 			}
-			sklad->pridajVozidlo(new Vozidlo(spz, typVozidla, nosnost, 0, new Den(den->getDen())));
+			if (sklad->skontrolujSPZ(spz)) {
+				sklad->pridajVozidlo(new Vozidlo(spz, typVozidla, nosnost, 0, new Den(den->getDen())));
+			}
+		else {
+				cout << "Zadane vozidlo uz existuje." << endl;
+			}
+			
 			
 			break;
 		}
 		case 4: {
 			cout << "Volba 4: Vypis vsetkych vozidiel \n----------------------------------------\n" << endl;
 			sklad->vypisVozidla();
+			break;
+		}
+
+		case 5: {
+			string obchodnyNazov;
+			int region;
+			cout << "Volba 5: Registracia noveho zakaznika \n----------------------------------------\n" << endl;
+			cout << "Zadaj obchodny nazov zakaznika: " << endl;
+			cin >> obchodnyNazov;
+			cout << "Zadaj region v ktorom sa zakaznik nachadza: " << endl;
+			cin >> region;
+			 
+			if (sklad->skontrolujNazovZakaznika(obchodnyNazov)) {
+				sklad->pridajZakaznika(new Zakaznik(obchodnyNazov, region));
+					cout << "Zakaznik bol uspecne pridany" << endl;	
+			}
+			else {
+				cout << "Zadany zakaznik uz existuje" << endl;
+			}
+
 			break;
 		}
 

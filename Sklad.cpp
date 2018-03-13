@@ -1,11 +1,13 @@
 #include "Sklad.h"
 #include "heap_monitor.h"
 #include <fstream>
+#include <string>
 
 Sklad::Sklad()
 {
 	zoznamBiofarmarov_ = new LinkedList<Biofarmar *>();
-	zoznamVozidiel_ = new LinkedList<Vozidlo *>();
+	zoznamVozidiel_ = new ArrayList<Vozidlo *>();
+	zoznamZakaznikov_ = new ArrayList<Zakaznik*>();
 }
 
 
@@ -76,7 +78,7 @@ void Sklad::bubbleSort(LinkedList <Biofarmar*> *linkedList, int size) { // O(n^2
 }
 
 //bubble sort pre vozidla - usporiadanie pod¾a datumu
-void Sklad::bubbleSortVozidiel(LinkedList <Vozidlo*> *linkedList, int size) { // O(n^2)
+void Sklad::bubbleSortVozidiel(ArrayList <Vozidlo*> *linkedList, int size) { // O(n^2)
 	for (int i = 0; i < size - 1; i++) {
 		for (int j = 0; j < size - i - 1; j++) {
 			if (linkedList->operator[](j + 1)->getDatumZaciatkuEvidencie()->getDen() < linkedList->operator[](j)->getDatumZaciatkuEvidencie()->getDen()) {
@@ -87,9 +89,29 @@ void Sklad::bubbleSortVozidiel(LinkedList <Vozidlo*> *linkedList, int size) { //
 	}
 }
 
+bool Sklad::skontrolujNazovBiofarmara(string nazovBiofarmara) {
+	for (Biofarmar *v : *zoznamBiofarmarov_) {
+		if (v->getObchodnyNazov() == nazovBiofarmara) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Sklad::skontrolujSPZ(string spz) {
+	for (Vozidlo *v : *zoznamVozidiel_) {
+		if (v->getSpz() == spz) {
+			return false;
+		}
+	}
+	return true;
+}
+
+
 void Sklad::pridajVozidlo(Vozidlo * vozidlo)
 {
 	zoznamVozidiel_->add(vozidlo);
+	cout << "Vozidlo bolo uspesne pridane" << endl;
 }
 
 void Sklad::vypisVozidla()
@@ -106,6 +128,18 @@ void Sklad::vypisVozidla()
 		cout << "Datum zaradenia do evidencie: " << v->getDatumZaciatkuEvidencie()->getDen() << endl;
 		cout << "Celkove naklady: " << v->getNaklady() << "\n" << endl;
 	}
+}
+
+void Sklad::pridajZakaznika(Zakaznik * zakaznik) {
+	zoznamZakaznikov_->add(zakaznik);
+}
+bool Sklad::skontrolujNazovZakaznika(string nazovZakaznika) {
+	for (Zakaznik *z : *zoznamZakaznikov_) {
+		if (z->getObchodnyNazov() == nazovZakaznika) {
+			return false;
+		}
+	}
+	return true;
 }
 
 Sklad::~Sklad()

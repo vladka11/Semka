@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Biofarmar.h"
 #include "Vozidlo.h"
+#include "Zakaznik.h"
 
 using namespace structures;
 	class Sklad
@@ -14,20 +15,28 @@ using namespace structures;
 	public:
 		Sklad();
 		void pridajBiofarmara(Biofarmar * biofarmar);
+		bool skontrolujNazovBiofarmara(string nazovBiofarmara);
+
 		void vypisBiofarmarov(LinkedList<Biofarmar *>* biofarmari);
 		void vypisUrcitychBiofarmarov(int typTovaru);
 		void bubbleSort(LinkedList<Biofarmar*>* linkedList, int size);
 
-		void bubbleSortVozidiel(LinkedList<Vozidlo*>* linkedList, int size);
+		void bubbleSortVozidiel(ArrayList<Vozidlo*>* linkedList, int size);
 
+		bool skontrolujSPZ(string spz);
 		void pridajVozidlo(Vozidlo * vozidlo);
 		void vypisVozidla();
+
+
+		void pridajZakaznika(Zakaznik * zakaznik);
+		bool skontrolujNazovZakaznika(string nazovZakaznika);
 		~Sklad();
 
 
 	private:
 		LinkedList<Biofarmar*>* zoznamBiofarmarov_;
-		LinkedList<Vozidlo*>* zoznamVozidiel_;
+		ArrayList<Vozidlo*>* zoznamVozidiel_;
+		ArrayList<Zakaznik*>* zoznamZakaznikov_;
 
 	};
 
