@@ -150,6 +150,7 @@
     <ClInclude Include="array_list.h" />
     <ClInclude Include="Den.h" />
     <ClInclude Include="Biofarmar.h" />
+    <ClInclude Include="DodavkaSurovin.h" />
     <ClInclude Include="ds_routines.h" />
     <ClInclude Include="ds_structure_types.h" />
     <ClInclude Include="explicit_queue.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="list.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="memory_routines.h" />
+    <ClInclude Include="Objednavka.h" />
     <ClInclude Include="priority_queue.h" />
     <ClInclude Include="priority_queue_list.h" />
     <ClInclude Include="queue.h" />
@@ -176,9 +178,11 @@
   <ItemGroup>
     <ClCompile Include="Den.cpp" />
     <ClCompile Include="Biofarmar.cpp" />
+    <ClCompile Include="DodavkaSurovin.cpp" />
     <ClCompile Include="ds_routines.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memory_routines.cpp" />
+    <ClCompile Include="Objednavka.cpp" />
     <ClCompile Include="Sklad.cpp" />
     <ClCompile Include="structure.cpp" />
     <ClCompile Include="vector.cpp" />

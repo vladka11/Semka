@@ -8,8 +8,9 @@ Biofarmar::Biofarmar(string obchodnyNazov, bool zemiaky, bool olej, bool ochucov
 {
 }
 
-string Biofarmar::getObchodnyNazov() {
-	return obchodnyNazov_;
+string Biofarmar::getObchodnyNazov() 
+{
+	return obchodnyNazov_;    
 }
 
 bool Biofarmar::getZemiaky()
@@ -25,6 +26,36 @@ bool Biofarmar::getOlej()
 bool Biofarmar::getOchucovadla()
 {
 	return ochucovadla_;
+}
+
+double Biofarmar::getPriemCenaZemiakov()
+{
+	return priemCenaZemiaky_;
+}
+
+double Biofarmar::getPriemCenaOleja()
+{
+	return priemCenaOlej_;
+}
+
+double Biofarmar::getPriemCenaOchucovadiel()
+{
+	return priemCenaOchucovadla_;
+}
+
+void Biofarmar::setPriemCenaZemiakov(double cena)
+{
+	priemCenaZemiaky_ = cena;
+}
+
+void Biofarmar::setPriemCenaOleja(double cena)
+{
+	priemCenaOlej_ = cena;
+}
+
+void Biofarmar::setPriemCenaOchucovadiel(double cena)
+{
+	priemCenaOchucovadla_ = cena;
 }
 
 Biofarmar::~Biofarmar()

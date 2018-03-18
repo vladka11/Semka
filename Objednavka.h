@@ -4,7 +4,14 @@
 class Objednavka
 {
 public:
-	Objednavka(Den * datumZaevidovania, Zakaznik * zakaznik, int typTovaru, int mnozstvo, double jednotkovaCena, Den * datumDorucenia);
+	Objednavka(Den * datumZaevidovania, Zakaznik * zakaznik, int typTovaru, double mnozstvo, double jednotkovaCena, Den * datumDorucenia, int stav);
+	Den *getDatumZaevidovania();
+	Zakaznik getZakaznik();
+	int getTypTovaru();
+	int getMnozstvoTovaru();
+	double getJednotkovaCena();
+	Den *getDatumDorucenia();
+	
 	~Objednavka();
 
 private:
@@ -14,6 +21,7 @@ private:
 	int mnozstvo_;
 	double jednotkovaCena_;
 	Den * datumDorucenia_;
+	int stav_;
 
 
 };

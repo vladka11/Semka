@@ -28,7 +28,7 @@ bool konverziaIntToBool(int cislo) {
 }
 void main()
 {
-	//initHeapMonitor(); 
+	initHeapMonitor(); 
 	Sklad * sklad = new Sklad();
 	Den * den = new Den(1);
 
@@ -39,12 +39,18 @@ void main()
 		cout << "3. Pridaj nove vozidlo  \n";
 		cout << "4. Vypis zoznam vozidiel podla datumu zaradenia do evidencie \n";
 		cout << "5. Pridaj noveho zakaznika \n";
+		cout << "6. Zaevidovanie novej objednavky \n" ; 
+		cout << "7. Skontroluj zasoby polotovarov\n";
 
+
+		cout <<"100. Vypis aktualny den: " << endl;
+		cout << "101. Zvys den" << endl;
 
 		cout << "\n-----Nacitavenie z txt-------" << endl;
 		cout << "|90. Nacitaj biofarmarov       |" << endl;
 		cout << "|91. Nacitaj vozidla           |" << endl;
-		//cout << "|92. Nacitaj vozidla z txt     |" << endl;
+		cout << "|92. Nacitaj zakaznikov        |" << endl;
+		cout << "|0. Ukonci program             |" << endl;
 		cout << "--------------------------------" << endl;
 		int vyber;
 		cin >> vyber;
@@ -93,6 +99,7 @@ void main()
 
 			cin >> volba;
 
+			sklad->aktualizujPriemerneNakupneCena(den->getDen());
 			sklad->vypisUrcitychBiofarmarov(volba);
 
 			break;
@@ -107,9 +114,9 @@ void main()
 			cout << "Co bude vozidlo rozvazat? 1 = Lupienky, 2 = Hranolceky" << endl;
 			cin >> typVozidla;
 			if (typVozidla == 1) {
-				nosnost = 2;
+				nosnost = 2000;
 			}else {
-				nosnost = 5;
+				nosnost = 5000;
 			}
 			if (sklad->skontrolujSPZ(spz)) {
 				sklad->pridajVozidlo(new Vozidlo(spz, typVozidla, nosnost, 0, new Den(den->getDen())));
@@ -147,6 +154,105 @@ void main()
 			break;
 		}
 
+		case 6: {
+			int typTovaru, zakaznik;
+			double jednotkovaCena,mnozstvo;
+			//Zakaznik * pomZakaznik;
+
+			int datumDorucenia;
+			cout << "Volba 5: Registracia noveho zakaznika \n----------------------------------------\n" << endl;
+			cout << "Vyber zakaznika zo zoznamu: " << endl;
+			sklad->vypisZakaznikov();
+			cin >> zakaznik;
+
+			cout << "O aky typ tovaru mate zaujem?  ( 1 = Lupienky, 2 = Hranolky)" << endl;
+			cin >> typTovaru;
+			cout << "Zadajte mnozstvo " << endl;
+			cin >> mnozstvo;
+			cout << "Zadajte jednotkovu cenu " << endl;
+			cin >> jednotkovaCena;
+			cout << "Zadajte datum dorucenia  " << endl;
+			cout << "Help (dnesny den): " << den->getDen() << endl;
+			cin >> datumDorucenia;
+			
+			if (sklad->skontrolujDatumDorucenia(datumDorucenia, den->getDen())) {
+				if (sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) + mnozstvo <= sklad->dajVolnuKapacituAut(typTovaru)) {
+
+					Zakaznik *pomZakaznik = sklad->dajZakaznikaPodlaIndexu(zakaznik - 1);
+					sklad->pridajSchvalenuObjednavku(new Objednavka(new Den(den->getDen()), pomZakaznik, typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), 0));
+					cout << "Hmotnost objednavok: " << sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) << "Kapacita aut: "<< sklad->dajVolnuKapacituAut(typTovaru);
+					cout << "Objednavka bola pridana" << endl;
+				}
+				else {
+					cout << "Objednavku nie je mozne zrealizovat kvoli kapacite vozidiel." << endl;
+				}
+			}
+			else {
+				cout << "Datum dorucenia objednavky musi byt vacsi ako o tyzden" << endl;
+			}
+			
+			sklad->vypisPoslednuObjednavku();
+			break;
+		
+		}
+
+		case 7: {
+
+			// Otestovanie koæko hranoliek
+			double hranolkyZobjednavok = sklad->dajObjednanyPocetHranoliek(den->getDen());
+			double lupienkyZobjednavok = sklad->dajObjednanyPocetLupienkov(den->getDen());
+
+
+			double potrebneZemiaky = hranolkyZobjednavok * 1.5 + lupienkyZobjednavok * 2;
+			double potrebnyOlej = hranolkyZobjednavok * 0.2 + lupienkyZobjednavok * 0.4;
+			double potrebneOchucovadla = lupienkyZobjednavok * 20;
+
+			//Len pre vypis, inak moûeö zmazaù ... 
+			hranolkyZobjednavok < 0 ? hranolkyZobjednavok = 0 : hranolkyZobjednavok = hranolkyZobjednavok;
+			lupienkyZobjednavok < 0 ? lupienkyZobjednavok = 0 : lupienkyZobjednavok = lupienkyZobjednavok;
+
+			cout << "\n \n Zhrnutie:  " << endl;
+			
+
+			sklad->aktualizujPriemerneNakupneCena(den->getDen());
+
+			if (sklad->getMnozstvoZemiakovNaSklade() < potrebneZemiaky) {
+				sklad->zabezpecZemiaky(potrebneZemiaky, den->getDen());
+				cout <<" Potrebovali sme "<< potrebneZemiaky << "kg zemiakov." << endl;
+			}
+			else {
+				cout << "0kg zemiakov." << endl;
+
+			}
+
+			if (sklad->getMnozstvoOlejaNaSklade() < potrebnyOlej) {
+				sklad->zabezpecOlej(potrebnyOlej, den->getDen());
+				cout << " Potrebovali sme " << potrebnyOlej << "l oleja." << endl;
+			}
+			else {
+				cout << "0l oleja." << endl;
+
+			}
+
+			if (sklad->getMnozstvoOchucovadielNaSklade() < potrebneOchucovadla) {
+				sklad->zabezpecOchucovadla(potrebneOchucovadla, den->getDen());
+				cout << " Potrebovali sme " << potrebneOchucovadla << "g ochucovadiel." << endl;
+			}
+			else {
+				cout << "0g ochucovadiel." << endl;
+
+			}
+	
+
+			break;
+		}
+
+		case 8: {
+			cout << sklad->dajRandomCislo(1, 2) <<endl;
+			break;
+		}
+
+
 		case 90: {
 			string obchodnyNazov;
 			int zemiaky, olej, ochucovadla;
@@ -180,9 +286,41 @@ void main()
 
 		}
 
+		case 92: {
+			int region;
+			string obchodnyNazov;
+			ifstream suborZakaznikov("zakaznici.txt");
+			string riadok;
+
+			if (suborZakaznikov.is_open()) {
+				while (suborZakaznikov >> obchodnyNazov >> region) {
+					sklad->pridajZakaznika(new Zakaznik(obchodnyNazov, region));
+				}
+			}
+			suborZakaznikov.close();
+			cout << "Zakaznici boli uspesne nacitani. " << endl;
+			break;
+
+		}
+
+		case 100: {
+			cout << "Dnes je den c."<< den->getDen() << " \n \n";
+			break;
+		}
+		case 101: {
+			den->zvysDen();
+			cout << "Den bol zvyseny" << endl;
+			cout << "Dnes je den c." << den->getDen() << endl;
+			break;
+
+		}
+
 		case 0: {
 			delete sklad;
 			sklad = nullptr;
+
+			delete den;
+			den = nullptr;
 			exit(0);
 
 		}

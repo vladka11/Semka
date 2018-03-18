@@ -93,6 +93,12 @@
     <ClInclude Include="Zakaznik.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objednavka.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DodavkaSurovin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ds_routines.cpp">
@@ -123,6 +129,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Zakaznik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objednavka.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DodavkaSurovin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
