@@ -11,6 +11,8 @@ public:
 	int getMnozstvoTovaru();
 	double getJednotkovaCena();
 	Den *getDatumDorucenia();
+	int getStav();
+	void setStav(int i);
 	
 	~Objednavka();
 

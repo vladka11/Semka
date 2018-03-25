@@ -4,6 +4,7 @@
 #include "Paleta.h"
 #include "array_list.h"
 #include "heap_monitor.h"
+#include "Objednavka.h";
 #include "explicit_stack.h"
 
 using namespace std;
@@ -16,6 +17,8 @@ private:
 	int nosnost_;
 	int naklady_;
 	Den *datZaradeniaDoEvid_;
+	ExplicitStack<Objednavka*>* tovarVoVozidle_;
+
 
 
 public:
@@ -25,7 +28,10 @@ public:
 	int getTypVozidla();
 	int getNosnost();
 	int getNaklady();
+	void setNosnost(int novaNosnost);
+	void setNaklady(int naklady);
 	Den *getDatumZaciatkuEvidencie();
+	ExplicitStack<Objednavka*>* getTovarVoVozidle();
 	
 };
 

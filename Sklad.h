@@ -57,20 +57,34 @@ public:
 	int dajObjednanyPocetHranoliek(int den);
 	int dajObjednanyPocetLupienkov(int den);
 	void zabezpecOlej(double mnozstvoOleja, int den);
-
 	void zabezpecZemiaky(double mnozstvoZemiakov, int den);
-
 	void zabezpecOchucovadla(double mnozstvoOchucovadiel, int den);
 		
 
 	//Ostatne
 	double dajRandomCislo(double min, double max);
-	void vyrobTovar();
+
+	//8.uloha
+	 void dajZajtrajsieObjednavky(int den);
+	 void bubbleSortObjednavokPodlaTrzby(ArrayList<Objednavka*>* linkedList, int size);
+
+	 //9.uloha
+	 void naplnVozidla(int den);
+	 void naplnVozidlaOstatnymiObjednavkami();
+	 void zosortujObjednavkyPodlaRegionu(ArrayList<Objednavka*>* objednavky);
+	 void zosortujObjednavkyPodlaDatumuDorucenia(ArrayList<Objednavka*>* objednavky);
+	 void vypisSkladu();
+
+	 //10.uloha
+	 void vylozVozidla();
 
 	//gettery
 	double getMnozstvoOlejaNaSklade();
 	double getMnozstvoOchucovadielNaSklade();
 	double getMnozstvoZemiakovNaSklade();
+	void setMnozstvoOlejaNaSklade(double mnozstvo);
+	void setMnozstvoOchucovadielNaSklade(double mnozstvo);
+	void setMnozstvoZemiakovNaSklade(double mnozstvo);
 
 
 		~Sklad();
@@ -88,7 +102,10 @@ public:
 		ArrayList<Zakaznik*>* zoznamZakaznikov_;
 		ArrayList<Objednavka*>* zoznamCakajucichObjednavok_;
 		ArrayList<Objednavka*>* zoznamZamietnutychObjednavok_;
+		ArrayList<Objednavka*>* zoznamZrusenychObjednavok_;
 		LinkedList<DodavkaSurovin*>* zoznamObjednavokPolotovaru_;
+		ArrayList<Objednavka*>* zoznamZrealizovanychObjednavok_;
+
 	};
 
 

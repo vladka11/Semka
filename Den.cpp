@@ -2,7 +2,7 @@
 #include "Den.h"
 
 Den::Den(int den) :
-	den_(den)
+	den(den)
 {
 
 }
@@ -11,17 +11,17 @@ Den::~Den()
 }
 void Den::zvysDen()
 {
-	den_++;
+	den++;
 }
 
 int Den::getDen()
 {
-	return den_;
+	return den;
 }
 
 void Den::setDen(int denn)
 {
-	den_ = denn;
+	den = denn;
 }
 
 

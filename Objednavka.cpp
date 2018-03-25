@@ -37,6 +37,16 @@ Den * Objednavka::getDatumDorucenia()
 	return datumDorucenia_;
 }
 
+int Objednavka::getStav()
+{
+	return stav_;
+}
+
+void Objednavka::setStav(int i)
+{
+	stav_ = i;
+}
+
 Objednavka::~Objednavka()
 {
 }

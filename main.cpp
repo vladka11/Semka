@@ -40,7 +40,16 @@ void main()
 		cout << "4. Vypis zoznam vozidiel podla datumu zaradenia do evidencie \n";
 		cout << "5. Pridaj noveho zakaznika \n";
 		cout << "6. Zaevidovanie novej objednavky \n" ; 
-		cout << "7. Skontroluj zasoby polotovarov\n";
+		cout << "7. Skontroluj zasoby polotovarov \n";
+		cout << "8. Vypis zajtrajsie objednavky \n" ;
+		cout << "9. Napln vozidla \n";
+
+
+		cout << endl;
+
+
+
+
 
 
 		cout <<"100. Vypis aktualny den: " << endl;
@@ -176,12 +185,16 @@ void main()
 			cin >> datumDorucenia;
 			
 			if (sklad->skontrolujDatumDorucenia(datumDorucenia, den->getDen())) {
-				if (sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) + mnozstvo <= sklad->dajVolnuKapacituAut(typTovaru)) {
-
-					Zakaznik *pomZakaznik = sklad->dajZakaznikaPodlaIndexu(zakaznik - 1);
-					sklad->pridajSchvalenuObjednavku(new Objednavka(new Den(den->getDen()), pomZakaznik, typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), 0));
-					cout << "Hmotnost objednavok: " << sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) << "Kapacita aut: "<< sklad->dajVolnuKapacituAut(typTovaru);
-					cout << "Objednavka bola pridana" << endl;
+				if (sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) + mnozstvo <= sklad->dajVolnuKapacituAut(typTovaru)){
+					if (mnozstvo < 5000 && typTovaru == 2 || mnozstvo < 2000 && typTovaru == 1) {
+						Zakaznik *pomZakaznik = sklad->dajZakaznikaPodlaIndexu(zakaznik - 1);
+						sklad->pridajSchvalenuObjednavku(new Objednavka(new Den(den->getDen()), pomZakaznik, typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), 0));
+						cout << "Hmotnost objednavok: " << sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) << "Kapacita aut: " << sklad->dajVolnuKapacituAut(typTovaru);
+						cout << "Objednavka bola pridana" << endl;
+					}
+					else {
+						cout << "Objednavku nie je mozne zrealizovat z dovodu maximalnej kapacity vozidla" << endl;
+					}
 				}
 				else {
 					cout << "Objednavku nie je mozne zrealizovat kvoli kapacite vozidiel." << endl;
@@ -231,7 +244,6 @@ void main()
 			}
 			else {
 				cout << "0l oleja." << endl;
-
 			}
 
 			if (sklad->getMnozstvoOchucovadielNaSklade() < potrebneOchucovadla) {
@@ -240,17 +252,34 @@ void main()
 			}
 			else {
 				cout << "0g ochucovadiel." << endl;
-
 			}
-	
-
 			break;
 		}
 
 		case 8: {
-			cout << sklad->dajRandomCislo(1, 2) <<endl;
+			sklad->dajZajtrajsieObjednavky(den->getDen() + 1);
+			sklad->vypisSkladu();
 			break;
 		}
+
+		case 9: {
+			sklad->naplnVozidla(den->getDen());
+			sklad->naplnVozidlaOstatnymiObjednavkami();
+			sklad->vypisSkladu();
+			break;
+		}
+
+		case 10: {
+			sklad->vylozVozidla();
+			break;
+		}
+
+
+
+
+
+
+
 
 
 		case 90: {
