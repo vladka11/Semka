@@ -66,9 +66,6 @@
     <ClInclude Include="stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Heap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="priority_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>

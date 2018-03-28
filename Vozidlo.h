@@ -1,10 +1,8 @@
 #pragma once
 #include <string>
-//#include "Datum.h"
-#include "Paleta.h"
 #include "array_list.h"
 #include "heap_monitor.h"
-#include "Objednavka.h";
+#include "Objednavka.h"
 #include "explicit_stack.h"
 
 using namespace std;

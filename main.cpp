@@ -42,14 +42,17 @@ void main()
 		cout << "6. Zaevidovanie novej objednavky \n" ; 
 		cout << "7. Skontroluj zasoby polotovarov \n";
 		cout << "8. Vypis zajtrajsie objednavky \n" ;
-		cout << "9. Napln vozidla \n";
+		cout << "9. Napln vozidla tovarom \n";
+		cout << "10. Odovzdaj tovar zakaznikom \n";
+		cout << "11. Vypis zakaznikov z daneho regionu \n";
+		cout << "12. Vypis vsetky objednavok za dany casovy interval  \n";
+		cout << "13. Vypis vsetkych nezrealizovanych objednavok \n";
+		cout << "14. Vyhladaj biofarmara od ktoreho sme najviac nakupili za 30dni \n";
+		cout << "15. Vypisanie celkoveho zisku \n";
+
 
 
 		cout << endl;
-
-
-
-
 
 
 		cout <<"100. Vypis aktualny den: " << endl;
@@ -83,7 +86,7 @@ void main()
 			cin >> olej;
 			if (kontrolaCisla(olej) == false) { break; }
 
-			cout << "Je biofarmar dodavatelom ochucovadiel? (Vlož 1=ano/0=nie)" << endl;
+			cout << "Je biofarmar dodavatelom ochucovadiel? (Vloz 1=ano/0=nie)" << endl;
 			cin >> ochucovadla;
 			if (kontrolaCisla(ochucovadla) == false) { break; }
 
@@ -99,7 +102,7 @@ void main()
 		}
 		case 2: {
 			int volba;
-			cout << "Volba 2: Výpis biofarmárov \n----------------------------------------\n" << endl;
+			cout << "Volba 2: Výpis biofarmarov \n----------------------------------------\n" << endl;
 			cout << "Vyber moznost pre vypisanie:" << endl;
 			cout << "1: vypis vsetkych biofarmarov" << endl;
 			cout << "2. vypis dodavatelov oleja" << endl;
@@ -193,11 +196,17 @@ void main()
 						cout << "Objednavka bola pridana" << endl;
 					}
 					else {
+						Zakaznik *pomZakaznik = sklad->dajZakaznikaPodlaIndexu(zakaznik - 1);
 						cout << "Objednavku nie je mozne zrealizovat z dovodu maximalnej kapacity vozidla" << endl;
+						sklad->pridajZamietnutuObjednavku(new Objednavka(new Den(den->getDen()), pomZakaznik, typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), 0));
+						
 					}
 				}
 				else {
+					Zakaznik *pomZakaznik = sklad->dajZakaznikaPodlaIndexu(zakaznik - 1);
 					cout << "Objednavku nie je mozne zrealizovat kvoli kapacite vozidiel." << endl;
+					sklad->pridajZamietnutuObjednavku(new Objednavka(new Den(den->getDen()), pomZakaznik, typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), 0));
+				
 				}
 			}
 			else {
@@ -274,13 +283,49 @@ void main()
 			break;
 		}
 
+		case 11: {
+			int region;
+			int denOd;
+			int denDo;
+			cout << "Vypisanie zoznamu zakaznikov" << endl;
+			cout << "Z akeho regionu chcete vypisat zakaznikov ? 1-8" << endl;
+			cin >> region;
+			cout << "Zadaj pociatocny den pre vypis prijmu " << endl;
+			cin >> denOd;
+			cout << "Zadaj konecne den pre vypis prijmu" << endl;
+			cin >> denDo;
+			sklad->vypisZakaznikov(region, denOd, denDo);
 
+			break;
+		}
+			
+		case 12: {
+			int denOd;
+			int denDo;
+			cout << "Vypis zrealizovanych objednavok" << endl;
+			cout << "Zadaj pociatocny den pre vypis" << endl;
+			cin >> denOd;
+			cout << "Zadaj konecny den pre vypis" << endl;
+			cin >> denDo;
+			sklad->vypisZrealizovaneObjednavky(denOd, denDo);
+			break;
 
+		}
 
+		case 13: {
+			int denOd;
+			int denDo;
+			cout << "Vypis zrusenych a zamietnutych objednavok" << endl;
+			cout << "Zadaj pociatocny den pre vypis" << endl;
+			cin >> denOd;
+			cout << "Zadaj konecny den pre vypis" << endl;
+			cin >> denDo;
 
-
-
-
+			//TO DOOO TO DOOO ODODODOD
+			break;
+	
+		}
+	
 
 		case 90: {
 			string obchodnyNazov;

@@ -356,7 +356,7 @@ void Sklad::zabezpecOchucovadla(double mnozstvoOchucovadiel, int den)
 	for (Biofarmar * bio : *zoznamBiofarmarov_) {
 		if (bio->getOchucovadla() && mnozstvoOchucovadiel > mnozstvoKupenychOchucovadiel) { 
 			double randomMnozstvoOchucovadiel = dajRandomCislo(0, 50000);
-			nakupPolotovar(new DodavkaSurovin(bio, 3, randomMnozstvoOchucovadiel, dajRandomCislo(1, 2), new Den(den)));
+			nakupPolotovar(new DodavkaSurovin(bio, 3, randomMnozstvoOchucovadiel, dajRandomCislo(1000, 2000), new Den(den)));
 			mnozstvoKupenychOchucovadiel += randomMnozstvoOchucovadiel;
 			cout << "Biofarmar " << bio->getObchodnyNazov() << "nakupil " << randomMnozstvoOchucovadiel << "kg ochucovadiel." << endl;
 		}
@@ -666,6 +666,74 @@ void Sklad::vylozVozidla()
 	}
 }
 
+void Sklad::vypisZakaznikov(int region, int denOd, int denDo)
+{
+	bubbleSortZakanikovPodlaAbc(zoznamZakaznikov_, zoznamZakaznikov_->size());
+	cout << "Zakaznici z regionu " + region << endl;
+	cout << endl;
+	for (Zakaznik *zak : *zoznamZakaznikov_) {
+		if (zak->getCisloRegionu() == region) {
+			int celkovyPrijem = 0;
+			for (Objednavka *obj : *zoznamZrealizovanychObjednavok_) {
+				if (obj->getZakaznik().getObchodnyNazov() == zak->getObchodnyNazov()
+					&& obj->getDatumDorucenia()->getDen() >= denOd
+					&& obj->getDatumDorucenia()->getDen() <= denDo) {
+					celkovyPrijem += obj->getJednotkovaCena()*obj->getMnozstvoTovaru();
+				}
+			}
+			int pocetZrus= 0;
+			int hmotnostZrus = 0;
+			int trzbyZrus = 0;
+			for (Objednavka *obj : *zoznamZrusenychObjednavok_) {
+				if (obj->getZakaznik().getObchodnyNazov() == zak->getObchodnyNazov()) {
+					pocetZrus++;
+					hmotnostZrus += obj->getMnozstvoTovaru();
+					trzbyZrus += obj->getMnozstvoTovaru()*obj->getJednotkovaCena();
+				}
+			}
+
+			int pocetZam = 0;
+			int hmotnostZam = 0;
+			int trzbyZam = 0;
+			for (Objednavka *obj : *zoznamZamietnutychObjednavok_){
+				if (obj->getZakaznik().getObchodnyNazov() == zak->getObchodnyNazov()) {
+					pocetZam++;
+					hmotnostZam += obj->getMnozstvoTovaru();
+					trzbyZam += obj->getMnozstvoTovaru()*obj->getJednotkovaCena();
+				}
+
+			}
+				cout << "Zakaznik: " << zak->getObchodnyNazov() << endl;
+				cout << "Celkovy prijem zo zrealizovanych: " << celkovyPrijem << endl;
+				cout << "Pocet zrusenych: " << pocetZrus << endl;
+				cout << "Hmotnost: " << hmotnostZrus << endl;
+				cout << "Celkove trzby: " << trzbyZrus << endl;
+				
+				cout << "Pocet zrusenych: " << pocetZam << endl;
+				cout << "Hmotnost: " << hmotnostZam << endl;
+				cout << "Celkove trzby: " << trzbyZam << endl;
+				cout << endl;
+		}
+	}
+
+}
+
+void Sklad::vypisZrealizovaneObjednavky(int denOd, int denDo)
+{
+	cout << "ZREALIZOVANE OBJEDNAVKY" << endl;
+	for (Objednavka *obj : *zoznamZrealizovanychObjednavok_) {
+		if (denOd <= obj->getDatumDorucenia()->getDen() && denDo >= obj->getDatumDorucenia()->getDen()) {
+			cout << "Zakaznik: " << obj->getZakaznik().getObchodnyNazov() << endl;
+			cout << "Datum realizacie: " << obj->getDatumDorucenia()->getDen() << endl;
+			cout << "Typ produktu: " << obj->getTypTovaru() << endl;
+			cout << "Mnozstvo: " << obj->getMnozstvoTovaru() << endl;
+			cout << "Celkove trzby: " << obj->getMnozstvoTovaru()*obj->getJednotkovaCena() << endl;
+			cout << endl;
+		}
+	
+	}
+}
+
 
 
 double Sklad::getMnozstvoOlejaNaSklade()
@@ -837,6 +905,18 @@ void Sklad::bubbleSortPodlaCenyOchucovadiel(LinkedList<Biofarmar*>* linkedList, 
 			if (linkedList->operator[](j + 1)->getPriemCenaOchucovadiel() < linkedList->operator[](j)->getPriemCenaOchucovadiel()) {
 
 				DSRoutines::swap(linkedList->operator[](j + 1), linkedList->operator[](j));
+			}
+		}
+	}
+}
+
+void Sklad::bubbleSortZakanikovPodlaAbc(ArrayList<Zakaznik*>* arrayList, int size)
+{
+	for (int i = 0; i < size - 1; i++) {
+		for (int j = 0; j < size - i - 1; j++) {
+			if (arrayList->operator[](j + 1)->getObchodnyNazov() < arrayList->operator[](j)->getObchodnyNazov()) {
+
+				DSRoutines::swap(arrayList->operator[](j + 1), arrayList->operator[](j));
 			}
 		}
 	}

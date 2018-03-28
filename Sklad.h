@@ -1,7 +1,6 @@
 #pragma once
 #include "array_list.h"
 #include "explicit_queue.h"
-#include "heap.h"
 #include "heap_monitor.h"
 #include "linked_list.h"
 #include <iostream>
@@ -26,6 +25,7 @@ public:
 	void usporiadajBofarmarovPodlaCenyPolotovarov(int typPolotovaru);
 	void bubbleSortPodlaCenyZemiakov(LinkedList<Biofarmar*>* linkedList, int size);
 	void bubbleSortPodlaCenyOchucovadiel(LinkedList<Biofarmar*>* linkedList, int size);
+	void bubbleSortZakanikovPodlaAbc(ArrayList<Zakaznik*>* arrayList, int size);
 	void bubbleSortPodlaCenyOleja(LinkedList<Biofarmar*>* linkedList, int size);
 
 
@@ -78,6 +78,12 @@ public:
 	 //10.uloha
 	 void vylozVozidla();
 
+	 //11.uloha
+	 void vypisZakaznikov(int region, int denOd, int denDo);
+
+	 //12.uloha
+	 void vypisZrealizovaneObjednavky(int denOd, int denDo);
+
 	//gettery
 	double getMnozstvoOlejaNaSklade();
 	double getMnozstvoOchucovadielNaSklade();
@@ -85,10 +91,8 @@ public:
 	void setMnozstvoOlejaNaSklade(double mnozstvo);
 	void setMnozstvoOchucovadielNaSklade(double mnozstvo);
 	void setMnozstvoZemiakovNaSklade(double mnozstvo);
-
-
-		~Sklad();
-
+	
+	~Sklad();
 
 	private:
 		double mnozstvoLupienkovNaSklade;

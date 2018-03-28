@@ -155,7 +155,6 @@
     <ClInclude Include="ds_structure_types.h" />
     <ClInclude Include="explicit_queue.h" />
     <ClInclude Include="explicit_stack.h" />
-    <ClInclude Include="Heap.h" />
     <ClInclude Include="heap_monitor.h" />
     <ClInclude Include="implicit_queue.h" />
     <ClInclude Include="implicit_stack.h" />
