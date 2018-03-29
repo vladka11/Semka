@@ -336,7 +336,7 @@ void Sklad::zabezpecOlej(double mnozstvoOleja, int den)
 			double randomMnzostvoOleja = dajRandomCislo(0, 1000);
 			nakupPolotovar(new DodavkaSurovin(bio, 2,randomMnzostvoOleja,dajRandomCislo(1,4), new Den(den)));
 			mnozstvoKupenehoOleja += randomMnzostvoOleja;
-			cout << "Biofarmar " << bio->getObchodnyNazov() << "nakúpil " << randomMnzostvoOleja << "l oleja." << endl;
+			cout << "Biofarmar " << bio->getObchodnyNazov() << " nakupil " << randomMnzostvoOleja << "l oleja." << endl;
 		}
 	}
 	mnozstvoOlejaNaSklade = mnozstvoKupenehoOleja;
@@ -352,7 +352,7 @@ void Sklad::zabezpecZemiaky(double mnozstvoZemiakov, int den)
 			double randomMnozstvoZemiakov = dajRandomCislo(0, 5000);
 			nakupPolotovar(new DodavkaSurovin(bio, 1, randomMnozstvoZemiakov, dajRandomCislo(1, 3), new Den(den)));
 			mnozstvoKupenychZemiakov += randomMnozstvoZemiakov;
-			cout << "Biofarmar " << bio->getObchodnyNazov() << "nakúpil " << randomMnozstvoZemiakov << "kg zemiakov." << endl;
+			cout << "Biofarmar " << bio->getObchodnyNazov() << " nakupil " << randomMnozstvoZemiakov << "kg zemiakov." << endl;
 		}
 	}
 	mnozstvoZemiakovNaSklade = mnozstvoKupenychZemiakov;
@@ -451,7 +451,6 @@ void Sklad::dajZajtrajsieObjednavky(int den)
 	while (zoznamNaZmazanie->size() > 0) {
 		Objednavka * obj = zoznamNaZmazanie->operator[](zoznamNaZmazanie->size() - 1);
 		zoznamNaZmazanie->removeAt(zoznamNaZmazanie->size() - 1);
-		//delete obj;
 	}
 	zoznamNaZmazanie->clear();
 	delete zoznamNaZmazanie;

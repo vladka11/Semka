@@ -195,7 +195,7 @@ void main()
 					if (mnozstvo < 5000 && typTovaru == 2 || mnozstvo < 2000 && typTovaru == 1) {
 						Zakaznik *pomZakaznik = sklad->dajZakaznikaPodlaIndexu(zakaznik - 1);
 						sklad->pridajSchvalenuObjednavku(new Objednavka(new Den(den->getDen()), pomZakaznik, typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), 0));
-						cout << "Hmotnost objednavok: " << sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) << "Kapacita aut: " << sklad->dajVolnuKapacituAut(typTovaru);
+						cout << "Hmotnost objednavok: " << sklad->dajHmotnostObjednavokNaDanyDen(datumDorucenia) << " Kapacita aut: " << sklad->dajVolnuKapacituAut(typTovaru) <<endl;
 						cout << "Objednavka bola pridana" << endl;
 					}
 					else {
