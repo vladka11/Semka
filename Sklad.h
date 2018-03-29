@@ -43,6 +43,8 @@ public:
 
 	//OBJEDNAVKY
 	void pridajSchvalenuObjednavku(Objednavka * objednavka);
+	void pridajZrealizovanuObjednavku(Objednavka * objednavka);
+	void pridajZrusenuObjednavku(Objednavka * objednavka);
 	void vypisPoslednuObjednavku();
 	bool skontrolujDatumDorucenia(int denDodania, int aktualnyDen);
 	double dajVolnuKapacituAut(int typObjednavky);
@@ -83,6 +85,21 @@ public:
 
 	 //12.uloha
 	 void vypisZrealizovaneObjednavky(int denOd, int denDo);
+	 void zoradPodlaDatumuZrealizovania();
+
+	 //13.ULOHA
+	 void vypisZamietnutychObjednavok(int denOd, int denDo);
+	 void vypisZrusenychObjednavok(int denOd, int denDo);
+
+	 //14.ULOHA
+	 void vyhladajBiofarmara(int typTovaru, int aktualnyDen);
+
+	 //15.ULOHA
+	 int dajZiskSpolocnosti(int denOd, int denDo);
+	 int dajNakladySpolocnosti(int denOd, int denDo);
+
+
+	 Zakaznik * vratZakaznika(string nazov);
 
 	//gettery
 	double getMnozstvoOlejaNaSklade();
@@ -91,7 +108,17 @@ public:
 	void setMnozstvoOlejaNaSklade(double mnozstvo);
 	void setMnozstvoOchucovadielNaSklade(double mnozstvo);
 	void setMnozstvoZemiakovNaSklade(double mnozstvo);
-	
+	ArrayList<Objednavka*>* getObjednavky();
+	ArrayList<Zakaznik*>* getZoznamZakaznikov();
+	LinkedList<Biofarmar*>* getZoznamBiofarmarov();
+	ArrayList<Objednavka*>* getZoznamZrealizovanychObjednavok();
+	ArrayList<Objednavka*>* getZoznamZrusenychObjednavok();
+	ArrayList<Objednavka*>* getZoznamZamietnutychObjednavok();
+	ArrayList<Objednavka*>* zoznamCakajucichObjednavok();
+	ArrayList<Vozidlo*>* getZoznamVozidiel();
+
+
+
 	~Sklad();
 
 	private:

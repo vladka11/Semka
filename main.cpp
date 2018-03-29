@@ -57,12 +57,15 @@ void main()
 
 		cout <<"100. Vypis aktualny den: " << endl;
 		cout << "101. Zvys den" << endl;
+		cout << "102. Zvys na zadany den" << endl;
 
 		cout << "\n-----Nacitavenie z txt-------" << endl;
 		cout << "|90. Nacitaj biofarmarov       |" << endl;
 		cout << "|91. Nacitaj vozidla           |" << endl;
 		cout << "|92. Nacitaj zakaznikov        |" << endl;
-		cout << "|0. Ukonci program             |" << endl;
+		cout << "|93. Nacitaj objednavky        |" << endl;
+		cout << "|94. Nacitaj den a sklad       |" << endl;
+		cout << "|0. Uloz a Ukonci program      |" << endl;
 		cout << "--------------------------------" << endl;
 		int vyber;
 		cin >> vyber;
@@ -227,7 +230,7 @@ void main()
 
 			double potrebneZemiaky = hranolkyZobjednavok * 1.5 + lupienkyZobjednavok * 2;
 			double potrebnyOlej = hranolkyZobjednavok * 0.2 + lupienkyZobjednavok * 0.4;
-			double potrebneOchucovadla = lupienkyZobjednavok * 20;
+			double potrebneOchucovadla = lupienkyZobjednavok * 0.02;
 
 			//Len pre vypis, inak moûeö zmazaù ... 
 			hranolkyZobjednavok < 0 ? hranolkyZobjednavok = 0 : hranolkyZobjednavok = hranolkyZobjednavok;
@@ -257,10 +260,10 @@ void main()
 
 			if (sklad->getMnozstvoOchucovadielNaSklade() < potrebneOchucovadla) {
 				sklad->zabezpecOchucovadla(potrebneOchucovadla, den->getDen());
-				cout << " Potrebovali sme " << potrebneOchucovadla << "g ochucovadiel." << endl;
+				cout << " Potrebovali sme " << potrebneOchucovadla << "kg ochucovadiel." << endl;
 			}
 			else {
-				cout << "0g ochucovadiel." << endl;
+				cout << "0kg ochucovadiel." << endl;
 			}
 			break;
 		}
@@ -307,6 +310,7 @@ void main()
 			cin >> denOd;
 			cout << "Zadaj konecny den pre vypis" << endl;
 			cin >> denDo;
+			sklad->zoradPodlaDatumuZrealizovania();
 			sklad->vypisZrealizovaneObjednavky(denOd, denDo);
 			break;
 
@@ -321,11 +325,41 @@ void main()
 			cout << "Zadaj konecny den pre vypis" << endl;
 			cin >> denDo;
 
-			//TO DOOO TO DOOO ODODODOD
+			sklad->vypisZamietnutychObjednavok(denOd, denDo);
+			sklad->vypisZrusenychObjednavok(denOd, denDo);
 			break;
 	
 		}
-	
+
+		case 14: {
+			sklad->aktualizujPriemerneNakupneCena(den->getDen());
+
+			int volba;
+			cout << "Vyhladanie biofarmara od ktorÈho sme najviac nakupili" << endl;
+			cout << "Aky typ produktu?? 1=zemiaky, 2=olej, 3=ochucovadla" << endl;
+			cin >> volba;
+
+			sklad->vyhladajBiofarmara(volba, den->getDen());
+			break;
+		}
+
+		case 15: {
+
+			int denOd;
+			int denDo;
+			cout << "Zadaj pociatocny den pre vypis" << endl;
+			cin >> denOd;
+			cout << "Zadaj konecny den pre vypis" << endl;
+			cin >> denDo;
+
+
+			int prijem = sklad->dajZiskSpolocnosti(denOd, denDo);
+			int naklady = sklad->dajNakladySpolocnosti(denOd, denDo);
+			cout << "CELKOVY PRIJEM: " << prijem << endl;;
+			cout << "CELKOVE NAKLADY: " << naklady << endl;;
+			cout << "CELKOVY ZISK: " << prijem - naklady << endl;
+			break;
+		}
 
 		case 90: {
 			string obchodnyNazov;
@@ -377,6 +411,83 @@ void main()
 
 		}
 
+		case 93: {
+		
+			int datumZaevidovania;
+			string zakaznik;
+			int typTovaru; // 1 = Lupienky, 2 = Hranolceky
+			int mnozstvo;
+			double jednotkovaCena;
+			int datumDorucenia;
+			int stav;
+			ifstream suborCakajucichObjednavok("objednavky_cakajuce.txt");
+			if  (suborCakajucichObjednavok.is_open()) {
+				
+				while (suborCakajucichObjednavok >>datumZaevidovania>> zakaznik >>typTovaru>>mnozstvo>>jednotkovaCena>>datumDorucenia>>stav) {
+					sklad->pridajSchvalenuObjednavku(new Objednavka(new Den(datumZaevidovania),sklad->vratZakaznika(zakaznik), typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), stav));
+				}
+			}
+			suborCakajucichObjednavok.close();
+
+
+			ifstream suborZrealizovanychObjednavok("objednavky_zrealizovane.txt");
+			if (suborZrealizovanychObjednavok.is_open()) {
+				while (suborZrealizovanychObjednavok >> datumZaevidovania >> zakaznik >> typTovaru >> mnozstvo >> jednotkovaCena >> datumDorucenia >> stav) {
+					sklad->pridajZrealizovanuObjednavku(new Objednavka(new Den(datumZaevidovania), sklad->vratZakaznika(zakaznik), typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), stav));
+				}
+			}
+			suborZrealizovanychObjednavok.close();
+
+
+			ifstream suborZamietnutychObjednavok("objednavky_zamietnute.txt");
+			if (suborZamietnutychObjednavok.is_open()) {
+				while (suborZamietnutychObjednavok >> datumZaevidovania >> zakaznik >> typTovaru >> mnozstvo >> jednotkovaCena >> datumDorucenia >> stav) {
+					sklad->pridajZamietnutuObjednavku(new Objednavka(new Den(datumZaevidovania), sklad->vratZakaznika(zakaznik), typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), stav));
+				}
+			}
+			suborZamietnutychObjednavok.close();
+
+
+			ifstream suborZrusenychObjednavok("objednavky_zrusene.txt");
+			if (suborZrusenychObjednavok.is_open()) {
+				while (suborZrusenychObjednavok >> datumZaevidovania >> zakaznik >> typTovaru >> mnozstvo >> jednotkovaCena >> datumDorucenia >> stav) {
+					sklad->pridajZrusenuObjednavku(new Objednavka(new Den(datumZaevidovania), sklad->vratZakaznika(zakaznik), typTovaru, mnozstvo, jednotkovaCena, new Den(datumDorucenia), stav));
+				}
+			}
+			suborZrusenychObjednavok.close();
+			cout << "Objednavky boli uspesne nacitane. " << endl;
+			break;
+
+		}
+
+		case 94: {
+			int dnik;
+			ifstream subor("aktualnyDen.txt");
+			double zemiaky, olej, ochucovadla;
+			ifstream suborr("polotovary.txt");
+		
+
+			if (subor.is_open()) {
+				while (subor >> dnik) {
+					den->setDen(dnik);
+				}  
+			}
+			cout << "Aktualny den: " << dnik << endl;
+	
+			if (suborr.is_open()) {
+			while (suborr >>zemiaky>>olej>>ochucovadla) {
+				sklad->setMnozstvoOchucovadielNaSklade(ochucovadla);
+				sklad->setMnozstvoOlejaNaSklade(olej);
+					sklad->setMnozstvoZemiakovNaSklade(zemiaky);
+			}
+			}
+		suborr.close();
+		subor.close();
+	
+		break;
+		}
+
+
 		case 100: {
 			cout << "Dnes je den c."<< den->getDen() << " \n \n";
 			break;
@@ -387,9 +498,96 @@ void main()
 			cout << "Dnes je den c." << den->getDen() << endl;
 			break;
 
+		case 102: {
+			int denn = 0;
+			cout << "Zadaj den na ktory sa chces presunut" << endl;
+			cin >> denn;
+			den->setDen(denn);
+			cout << "Si na dni " << denn << endl;
+			break;
+
+		}
+
+		case 500: {
+			sklad->vypisSkladu();
+			break;
 		}
 
 		case 0: {
+
+			//ulozenie do suborov
+
+			//ZAKAZNICI
+			if (sklad->getZoznamZakaznikov()->size() > 0) {
+				ofstream subor;
+				subor.open("zakaznici.txt");
+				for (Zakaznik * zak : *sklad->getZoznamZakaznikov()) {
+					subor << zak->getObchodnyNazov() << " " << zak->getCisloRegionu() << "\n";
+				}
+				subor.close();
+			}
+
+			//VOZIDLA
+			if (sklad->getZoznamVozidiel()->size() > 0) {
+				ofstream subor;
+				subor.open("vozidla.txt");
+				for (Vozidlo * voz : *sklad->getZoznamVozidiel()) {
+					subor << voz->getSpz() << " " << voz->getTypVozidla() << " " << voz->getNosnost() << " " << voz->getNaklady() << " " << voz->getDatumZaciatkuEvidencie() << "\n";
+				}
+				subor.close();
+			}
+
+			//BIOFARMARI
+			if (sklad->getZoznamBiofarmarov()->size() > 0) {
+				ofstream subor;
+				subor.open("biofarmari.txt");
+				for (Biofarmar * bio : *sklad->getZoznamBiofarmarov()) {
+					subor <<  bio->getObchodnyNazov() << " " << bio->getZemiaky() << " " << bio->getOlej() << " " << bio->getOchucovadla() << "\n";
+				}
+				subor.close();
+			}
+			
+			////ZREALIZOVANE OBJEDNAVKY
+			if (sklad->getZoznamZrealizovanychObjednavok()->size() > 0) {
+				ofstream subor;
+				subor.open("objednavky_zrealizovane.txt");
+				for  (Objednavka * obj : *sklad->getZoznamZrealizovanychObjednavok()) {
+					subor << obj->getDatumZaevidovania()->getDen() << " " << obj->getZakaznik().getObchodnyNazov() << " " << obj->getTypTovaru() << " " << obj->getMnozstvoTovaru() << " " << obj->getJednotkovaCena() << " " << obj->getDatumDorucenia()->getDen() << " " << obj->getStav() <<  "\n";
+				}
+				subor.close();
+			}
+
+			////ZRUSENE OBJEDNAVKY
+			if (sklad->getZoznamZrusenychObjednavok()->size() > 0) {
+				ofstream subor;
+				subor.open("objednavky_zrusene.txt");
+				for (Objednavka * obj : *sklad->getZoznamZrusenychObjednavok()) {
+					subor << obj->getDatumZaevidovania()->getDen() << " " << obj->getZakaznik().getObchodnyNazov() << " " << obj->getTypTovaru() << " " << obj->getMnozstvoTovaru() << " " << obj->getJednotkovaCena() << " " << obj->getDatumDorucenia()->getDen() << " " << obj->getStav() << "\n";
+				}
+				subor.close();
+			}
+
+			////CAKAJUCE
+			if (sklad->zoznamCakajucichObjednavok()->size() > 0) {
+				ofstream subor;
+				subor.open("objednavky_cakajuce.txt");
+				for (Objednavka * obj : *sklad->zoznamCakajucichObjednavok()) {
+					subor << obj->getDatumZaevidovania()->getDen() << " " << obj->getZakaznik().getObchodnyNazov() << " " << obj->getTypTovaru() << " " << obj->getMnozstvoTovaru() << " " << obj->getJednotkovaCena() << " " << obj->getDatumDorucenia()->getDen() << " " << obj->getStav() << "\n";
+				}
+				subor.close();
+			}
+
+				 ofstream subor;
+				 subor.open("aktualnyDen.txt");
+				 subor << den->getDen();
+				 subor.close();
+
+		 ////POLOTOVARY
+
+				 ofstream polotovarySubor;
+				 polotovarySubor.open("polotovary.txt");
+				 polotovarySubor << sklad->getMnozstvoZemiakovNaSklade() << " " << sklad->getMnozstvoOlejaNaSklade() << " " << sklad->getMnozstvoOchucovadielNaSklade();
+		
 			delete sklad;
 			sklad = nullptr;
 
@@ -403,5 +601,5 @@ void main()
 
 
 }
-}
+}}
 

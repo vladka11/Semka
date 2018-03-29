@@ -202,6 +202,16 @@ void Sklad::pridajSchvalenuObjednavku(Objednavka * objednavka) {
 	zoznamCakajucichObjednavok_->add(objednavka);
 }
 
+void Sklad::pridajZrealizovanuObjednavku(Objednavka * objednavka)
+{
+	zoznamZrealizovanychObjednavok_->add(objednavka);
+}
+
+void Sklad::pridajZrusenuObjednavku(Objednavka * objednavka)
+{
+	zoznamZrusenychObjednavok_->add(objednavka);
+}
+
 void Sklad::vypisPoslednuObjednavku() {
 
 	for (Objednavka * obj : *zoznamCakajucichObjednavok_) {
@@ -355,8 +365,8 @@ void Sklad::zabezpecOchucovadla(double mnozstvoOchucovadiel, int den)
 	double mnozstvoKupenychOchucovadiel = mnozstvoOchucovadlaNaSklade;
 	for (Biofarmar * bio : *zoznamBiofarmarov_) {
 		if (bio->getOchucovadla() && mnozstvoOchucovadiel > mnozstvoKupenychOchucovadiel) { 
-			double randomMnozstvoOchucovadiel = dajRandomCislo(0, 50000);
-			nakupPolotovar(new DodavkaSurovin(bio, 3, randomMnozstvoOchucovadiel, dajRandomCislo(1000, 2000), new Den(den)));
+			double randomMnozstvoOchucovadiel = dajRandomCislo(0, 50); //v kg
+			nakupPolotovar(new DodavkaSurovin(bio, 3, randomMnozstvoOchucovadiel, dajRandomCislo(1,2), new Den(den)));
 			mnozstvoKupenychOchucovadiel += randomMnozstvoOchucovadiel;
 			cout << "Biofarmar " << bio->getObchodnyNazov() << "nakupil " << randomMnozstvoOchucovadiel << "kg ochucovadiel." << endl;
 		}
@@ -396,7 +406,7 @@ void Sklad::dajZajtrajsieObjednavky(int den)
 				cout << "Typ tovaru: lupienky" << endl;
 				olej += zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru()*0.4;
 				zemiaky += zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru() * 2;
-				ochucovadla += zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru() * 20;
+				ochucovadla += zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru() * 0.02;
 				if (olej < getMnozstvoOlejaNaSklade() && zemiaky < getMnozstvoZemiakovNaSklade() && ochucovadla < getMnozstvoOchucovadielNaSklade()) {
 					cout << "Objednavka NEBUDE zrusena kvoli nedostatku tovaru" << endl << endl;
 				}
@@ -404,7 +414,7 @@ void Sklad::dajZajtrajsieObjednavky(int den)
 					cout << "Objednavka BUDE zrusena kvoli nedostatku tovaru" << endl << endl;
 					olej -= zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru()*0.4;
 					zemiaky -= zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru() * 2;
-					ochucovadla -= zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru() * 20;
+					ochucovadla -= zoznamCakajucichObjednavok_->operator[](i)->getMnozstvoTovaru() * 0.02;
 					zoznamZrusenychObjednavok_->add(zoznamCakajucichObjednavok_->operator[](i));
 					zoznamNaZmazanie->add(zoznamCakajucichObjednavok_->operator[](i));
 					//zoznamCakajucichObjednavok_->tryRemove(zoznamCakajucichObjednavok_->operator[](i));
@@ -504,7 +514,7 @@ void Sklad::naplnVozidla(int den)
 					voz->setNosnost(voz->getNosnost() - obj->getMnozstvoTovaru());
 					obj->setStav(1);
 					setMnozstvoOlejaNaSklade(getMnozstvoOlejaNaSklade() - obj->getMnozstvoTovaru()*0.4);
-					setMnozstvoOchucovadielNaSklade(getMnozstvoOchucovadielNaSklade() - obj->getMnozstvoTovaru() * 20);
+					setMnozstvoOchucovadielNaSklade(getMnozstvoOchucovadielNaSklade() - obj->getMnozstvoTovaru() * 0.02);
 					setMnozstvoZemiakovNaSklade(getMnozstvoZemiakovNaSklade() - obj->getMnozstvoTovaru() * 2);
 				    cout << "Do vozidla s spz: " << voz->getSpz() << "sme nalozili lupienky v mnozstve: " << obj->getMnozstvoTovaru() << "kg" <<endl;
 					cout << "Dana objednavka bola od zakaznika " << obj->getZakaznik().getObchodnyNazov() << " z regionu " << obj->getZakaznik().getCisloRegionu() << endl;
@@ -570,7 +580,7 @@ void Sklad::naplnVozidlaOstatnymiObjednavkami()
 
 				if (obj->getTypTovaru() == 1) {
 					setMnozstvoOlejaNaSklade(getMnozstvoOlejaNaSklade() - obj->getMnozstvoTovaru()*0.4);
-					setMnozstvoOchucovadielNaSklade(getMnozstvoOchucovadielNaSklade() - obj->getMnozstvoTovaru() * 20);
+					setMnozstvoOchucovadielNaSklade(getMnozstvoOchucovadielNaSklade() - obj->getMnozstvoTovaru() * 0.02);
 					setMnozstvoZemiakovNaSklade(getMnozstvoZemiakovNaSklade() - obj->getMnozstvoTovaru() * 2);
 					cout << "Do vozidla s spz: " << voz->getSpz() << "sme nalozili lupienky v mnozstve: " << obj->getMnozstvoTovaru() << "kg" << endl;;
 				} 
@@ -709,12 +719,13 @@ void Sklad::vypisZakaznikov(int region, int denOd, int denDo)
 				cout << "Hmotnost: " << hmotnostZrus << endl;
 				cout << "Celkove trzby: " << trzbyZrus << endl;
 				
-				cout << "Pocet zrusenych: " << pocetZam << endl;
+				cout << "Pocet zamietnutych: " << pocetZam << endl;
 				cout << "Hmotnost: " << hmotnostZam << endl;
 				cout << "Celkove trzby: " << trzbyZam << endl;
 				cout << endl;
 		}
 	}
+
 
 }
 
@@ -725,7 +736,11 @@ void Sklad::vypisZrealizovaneObjednavky(int denOd, int denDo)
 		if (denOd <= obj->getDatumDorucenia()->getDen() && denDo >= obj->getDatumDorucenia()->getDen()) {
 			cout << "Zakaznik: " << obj->getZakaznik().getObchodnyNazov() << endl;
 			cout << "Datum realizacie: " << obj->getDatumDorucenia()->getDen() << endl;
-			cout << "Typ produktu: " << obj->getTypTovaru() << endl;
+			string typTovaru = "hranolky";
+			if (obj->getTypTovaru() == 1) {
+				typTovaru = "lupienky";
+			}
+			cout << "Typ produktu: " << typTovaru << endl;
 			cout << "Mnozstvo: " << obj->getMnozstvoTovaru() << endl;
 			cout << "Celkove trzby: " << obj->getMnozstvoTovaru()*obj->getJednotkovaCena() << endl;
 			cout << endl;
@@ -734,6 +749,144 @@ void Sklad::vypisZrealizovaneObjednavky(int denOd, int denDo)
 	}
 }
 
+void Sklad::zoradPodlaDatumuZrealizovania()
+{
+	int size = zoznamZrealizovanychObjednavok_->size();
+	for (int i = 0; i < size - 1; i++) {
+		for (int j = 0; j < size - i - 1; j++) {
+			if (zoznamZrealizovanychObjednavok_->operator[](j + 1)->getDatumDorucenia()->getDen() < zoznamZrealizovanychObjednavok_->operator[](j)->getDatumDorucenia()->getDen()) {
+
+				DSRoutines::swap(zoznamZrealizovanychObjednavok_->operator[](j + 1), zoznamZrealizovanychObjednavok_->operator[](j));
+			}
+		}
+	}
+	
+}
+
+void Sklad::vypisZamietnutychObjednavok(int denOd, int denDo)
+{
+	cout << "ZAMIETNUTE OBJEDNAVKY" << endl;
+	for (Objednavka *obj : *zoznamZamietnutychObjednavok_) {
+		if (denOd <= obj->getDatumDorucenia()->getDen() && denDo >= obj->getDatumDorucenia()->getDen()) {
+			cout << "Zakaznik: " << obj->getZakaznik().getObchodnyNazov() << endl;
+			cout << "Datum realizacie: " << obj->getDatumDorucenia()->getDen() << endl;
+			string typTovaru= "hranolky";
+			if (obj->getTypTovaru()==1) {
+				typTovaru = "lupienky";
+			}
+			cout << "Typ produktu: " << typTovaru << endl;
+			cout << "Mnozstvo: " << obj->getMnozstvoTovaru() << endl;
+			cout << "Celkove trzby: " << obj->getMnozstvoTovaru() * obj->getJednotkovaCena() << endl;
+			cout << endl;
+		}
+	}
+}
+
+void Sklad::vypisZrusenychObjednavok(int denOd, int denDo)
+{
+	cout << "ZRUSENE OBJEDNAVKY" << endl;
+	for (Objednavka *obj : *zoznamZrusenychObjednavok_) {
+		if (denOd <= obj->getDatumDorucenia()->getDen() && denDo >= obj->getDatumDorucenia()->getDen()) {
+			cout << "Zakaznik: " << obj->getZakaznik().getObchodnyNazov() << endl;
+			cout << "Datum realizacie: " << obj->getDatumDorucenia()->getDen() << endl;
+			string typTovaru = "hranolky";
+			if (obj->getTypTovaru() == 1) {
+				typTovaru = "lupienky";
+			}
+			cout << "Typ produktu: " << typTovaru << endl;
+			cout << "Mnozstvo: " << obj->getMnozstvoTovaru() << endl;
+			cout << "Celkove trzby: " << obj->getMnozstvoTovaru() * obj->getJednotkovaCena() << endl;
+			cout << endl;
+		}
+	}
+}
+
+void Sklad::vyhladajBiofarmara(int typTovaru, int den)
+{
+
+	if (zoznamObjednavokPolotovaru_->size() > 0) {
+	int maxMnozstvoPolotovarov =0;
+	int maxCenaSpolu = 0;
+
+	Biofarmar *maxBio = zoznamBiofarmarov_->operator[](0);
+
+	for (Biofarmar *bio : *zoznamBiofarmarov_) {
+		int mnozstvoPolotovarov = 0;
+		int cenaSpolu = 0;
+
+		for (DodavkaSurovin * surky: *zoznamObjednavokPolotovaru_) {
+			if (surky->getBiofarmar()->getObchodnyNazov() == bio->getObchodnyNazov() && surky->getTypSuroviny() == typTovaru && surky->getDatum()->getDen() >= den-30) {
+				mnozstvoPolotovarov += surky->getMnozstvo();	
+				cenaSpolu += surky->getCelkovaCena();
+			}
+		}
+		if (mnozstvoPolotovarov > maxMnozstvoPolotovarov) {
+			maxMnozstvoPolotovarov = mnozstvoPolotovarov;
+			maxCenaSpolu = cenaSpolu;
+			maxBio = bio;
+		}
+	}
+	string typ = "ochucovadla";
+	int jednotkovaCena = maxBio->getPriemCenaOchucovadiel();
+	if (typTovaru == 1) {
+		typ = "zemiaky";
+		jednotkovaCena = maxBio->getPriemCenaZemiakov();
+	}
+	else if (typTovaru == 2) {
+		typ = "olej";
+		jednotkovaCena = maxBio->getPriemCenaOleja();
+	}
+
+	cout << "Najviac tovaru: " << typ << " sme nakupili od biofarmara: " << maxBio->getObchodnyNazov() << endl;
+	cout << "Celkove mnozstvo: " << maxMnozstvoPolotovarov << endl;
+	cout << "Celkova cena: " << maxCenaSpolu << endl;
+	cout << "Priemerna jednotkova cena: " << jednotkovaCena << endl;
+
+	}
+	else {
+		cout << "Dany druh tovaru sme zatial nenakupovali." << endl;
+
+	}
+}
+
+int Sklad::dajZiskSpolocnosti(int denOd, int denDo)
+{
+
+	int celkovaCena = 0;
+	for (Objednavka *obj : *zoznamZrealizovanychObjednavok_) {
+		if (obj->getDatumDorucenia()->getDen() >= denOd && obj->getDatumDorucenia()->getDen() <= denDo) {
+			celkovaCena += obj->getJednotkovaCena()*obj->getMnozstvoTovaru();
+		}
+	}
+	return celkovaCena;
+}
+
+int Sklad::dajNakladySpolocnosti(int denOd, int denDo)
+{
+	int nakladyZaPolotovary = 0;
+	for (DodavkaSurovin * dodavka : *zoznamObjednavokPolotovaru_) {
+		if (dodavka->getDatum()->getDen() >= denOd && dodavka->getDatum()->getDen() <= denDo) {
+			nakladyZaPolotovary += dodavka->getCelkovaCena();
+		}
+	}
+
+	int nakladyZaVozidla = 0;
+	for (Vozidlo * voz : *zoznamVozidiel_) {
+		nakladyZaVozidla += voz->getNaklady();
+	}
+
+	return nakladyZaPolotovary + nakladyZaVozidla;
+
+}
+
+Zakaznik * Sklad::vratZakaznika(string nazov)
+{
+	for (Zakaznik * zak : *zoznamZakaznikov_) {
+		if (zak->getObchodnyNazov() == nazov) {
+			return zak;
+		}
+	}
+}
 
 
 double Sklad::getMnozstvoOlejaNaSklade()
@@ -764,6 +917,46 @@ void Sklad::setMnozstvoOchucovadielNaSklade(double mnozstvo)
 void Sklad::setMnozstvoZemiakovNaSklade(double mnozstvo)
 {
 	mnozstvoZemiakovNaSklade = mnozstvo;
+}
+
+ArrayList<Objednavka*>* Sklad::getObjednavky()
+{
+	return zoznamCakajucichObjednavok_;
+}
+
+ArrayList<Zakaznik*>* Sklad::getZoznamZakaznikov()
+{
+	return  zoznamZakaznikov_;
+}
+
+LinkedList<Biofarmar*>* Sklad::getZoznamBiofarmarov()
+{
+	return zoznamBiofarmarov_;
+}
+
+ArrayList<Objednavka*>* Sklad::getZoznamZrealizovanychObjednavok()
+{
+	return zoznamZrealizovanychObjednavok_;
+}
+
+ArrayList<Objednavka*>* Sklad::getZoznamZrusenychObjednavok()
+{
+	return zoznamZrusenychObjednavok_;
+}
+
+ArrayList<Objednavka*>* Sklad::getZoznamZamietnutychObjednavok()
+{
+	return zoznamZamietnutychObjednavok_;
+}
+
+ArrayList<Objednavka*>* Sklad::zoznamCakajucichObjednavok()
+{
+	return zoznamCakajucichObjednavok_;
+}
+
+ArrayList<Vozidlo*>* Sklad::getZoznamVozidiel()
+{
+	return zoznamVozidiel_;
 }
 
 Sklad::~Sklad()
