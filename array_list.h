@@ -149,7 +149,7 @@ namespace structures
 
 	template<typename T>
 	inline ArrayList<T>::ArrayList(const ArrayList<T>& other) :
-		List(),
+		List(), //arraylist je potomkom listu preto treba najskôr zavola konštruktor 
 		array_(new Array<T>(*other.array_)),
 		size_(other.size_)
 	{
@@ -312,10 +312,10 @@ namespace structures
 	}
 
 	template<typename T>
-	inline ArrayList<T>::ArrayListIterator::~ArrayListIterator()
+	inline ArrayList<T>::ArrayListIterator::~ArrayListIterator() //všetky operácie iterátora majú zloitos O(1)
 	{
 		arrayList_ = nullptr;
-		position_ = 0;
+		position_ = -1;
 	}
 
 	template<typename T>

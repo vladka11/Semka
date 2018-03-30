@@ -322,7 +322,7 @@ namespace structures
 	}
 
 	template<typename T>
-	inline bool LinkedList<T>::tryRemove(const T & data)
+	inline bool LinkedList<T>::tryRemove(const T & data) // Vymaže prvý výskyt "data" v linked liste
 	{
 		int index = getIndexOf(data);
 		if (index == -1)
@@ -330,6 +330,7 @@ namespace structures
 			return false;
 		}
 		else
+
 		{
 			removeAt(index);
 			return true;
@@ -352,6 +353,7 @@ namespace structures
 		else
 		{
 			if (index == 0)
+
 			{
 				delItem = first_;
 				first_ = first_->getNext();
@@ -372,6 +374,7 @@ namespace structures
 		delete delItem;
 		size_--;
 		return result;
+
 	}
 
 	template<typename T>
@@ -382,6 +385,7 @@ namespace structures
 
 		while (item != nullptr)
 		{
+
 			if (item->accessData() == data)
 			{
 				return index;
@@ -402,6 +406,7 @@ namespace structures
 
 			while (delItem != nullptr)
 			{
+
 				LinkedListItem<T>* nextItem = delItem->getNext();
 				delete delItem;
 				delItem = nextItem;
@@ -433,6 +438,7 @@ namespace structures
 		LinkedListItem<T>* result = first_;
 		for (int i = 0; i < index; i++)
 		{
+
 			result = result->getNext();
 		}
 		return result;

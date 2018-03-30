@@ -56,8 +56,8 @@ public:
 	//POLOTOVARY
 	void nakupPolotovar(DodavkaSurovin * objednavkaPolotovarov);
 	//metody vratia poèet tovarov ktore nam chybaju
-	int dajObjednanyPocetHranoliek(int den);
-	int dajObjednanyPocetLupienkov(int den);
+	double dajObjednanyPocetHranoliek(int den);
+	double dajObjednanyPocetLupienkov(int den);
 	void zabezpecOlej(double mnozstvoOleja, int den);
 	void zabezpecZemiaky(double mnozstvoZemiakov, int den);
 	void zabezpecOchucovadla(double mnozstvoOchucovadiel, int den);
@@ -95,8 +95,8 @@ public:
 	 void vyhladajBiofarmara(int typTovaru, int aktualnyDen);
 
 	 //15.ULOHA
-	 int dajZiskSpolocnosti(int denOd, int denDo);
-	 int dajNakladySpolocnosti(int denOd, int denDo);
+	 double dajZiskSpolocnosti(int denOd, int denDo);
+	 double dajNakladySpolocnosti(int denOd, int denDo);
 
 
 	 Zakaznik * vratZakaznika(string nazov);

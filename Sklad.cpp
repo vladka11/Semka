@@ -6,7 +6,7 @@
 
 Sklad::Sklad()
 {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 	zoznamBiofarmarov_ = new LinkedList<Biofarmar *>();
 	zoznamVozidiel_ = new ArrayList<Vozidlo *>();
 	zoznamZakaznikov_ = new ArrayList<Zakaznik*>();
@@ -187,7 +187,7 @@ bool Sklad::skontrolujNazovZakaznika(string nazovZakaznika) {
 }
 
 void Sklad::vypisZakaznikov() {
-	int i = 0;
+	unsigned int i = 0;
 	for (i; i < zoznamZakaznikov_->size(); i++) {
 		cout << i+1 << ". " << zoznamZakaznikov_->operator[](i)->getObchodnyNazov() << endl;
 	}
@@ -303,7 +303,7 @@ void Sklad::nakupPolotovar(DodavkaSurovin * objednavkaPolotovarov)
 
 }
 // 1 = Lupienky, 2 = Hranolceky
-int Sklad::dajObjednanyPocetHranoliek(int den)
+double Sklad::dajObjednanyPocetHranoliek(int den)
 {
 	double objednaneMnozstvo = 0;
 	for (Objednavka * obj : * zoznamCakajucichObjednavok_) {
@@ -314,7 +314,7 @@ int Sklad::dajObjednanyPocetHranoliek(int den)
 	return objednaneMnozstvo - mnozstvoHranolcekovNaSklade;
 }
 
-int Sklad::dajObjednanyPocetLupienkov(int den)
+double Sklad::dajObjednanyPocetLupienkov(int den)
 {
 	
 	double objednaneMnozstvo = 0;
@@ -682,7 +682,7 @@ void Sklad::vypisZakaznikov(int region, int denOd, int denDo)
 	cout << endl;
 	for (Zakaznik *zak : *zoznamZakaznikov_) {
 		if (zak->getCisloRegionu() == region) {
-			int celkovyPrijem = 0;
+			double celkovyPrijem = 0;
 			for (Objednavka *obj : *zoznamZrealizovanychObjednavok_) {
 				if (obj->getZakaznik().getObchodnyNazov() == zak->getObchodnyNazov()
 					&& obj->getDatumDorucenia()->getDen() >= denOd
@@ -691,8 +691,8 @@ void Sklad::vypisZakaznikov(int region, int denOd, int denDo)
 				}
 			}
 			int pocetZrus= 0;
-			int hmotnostZrus = 0;
-			int trzbyZrus = 0;
+			double hmotnostZrus = 0;
+			double trzbyZrus = 0;
 			for (Objednavka *obj : *zoznamZrusenychObjednavok_) {
 				if (obj->getZakaznik().getObchodnyNazov() == zak->getObchodnyNazov()) {
 					pocetZrus++;
@@ -702,8 +702,8 @@ void Sklad::vypisZakaznikov(int region, int denOd, int denDo)
 			}
 
 			int pocetZam = 0;
-			int hmotnostZam = 0;
-			int trzbyZam = 0;
+			double hmotnostZam = 0;
+			double trzbyZam = 0;
 			for (Objednavka *obj : *zoznamZamietnutychObjednavok_){
 				if (obj->getZakaznik().getObchodnyNazov() == zak->getObchodnyNazov()) {
 					pocetZam++;
@@ -804,14 +804,14 @@ void Sklad::vyhladajBiofarmara(int typTovaru, int den)
 {
 
 	if (zoznamObjednavokPolotovaru_->size() > 0) {
-	int maxMnozstvoPolotovarov =0;
-	int maxCenaSpolu = 0;
+	double maxMnozstvoPolotovarov =0;
+	double maxCenaSpolu = 0;
 
 	Biofarmar *maxBio = zoznamBiofarmarov_->operator[](0);
 
 	for (Biofarmar *bio : *zoznamBiofarmarov_) {
-		int mnozstvoPolotovarov = 0;
-		int cenaSpolu = 0;
+		double mnozstvoPolotovarov = 0;
+		double cenaSpolu = 0;
 
 		for (DodavkaSurovin * surky: *zoznamObjednavokPolotovaru_) {
 			if (surky->getBiofarmar()->getObchodnyNazov() == bio->getObchodnyNazov() && surky->getTypSuroviny() == typTovaru && surky->getDatum()->getDen() >= den-30) {
@@ -826,7 +826,7 @@ void Sklad::vyhladajBiofarmara(int typTovaru, int den)
 		}
 	}
 	string typ = "ochucovadla";
-	int jednotkovaCena = maxBio->getPriemCenaOchucovadiel();
+	double jednotkovaCena = maxBio->getPriemCenaOchucovadiel();
 	if (typTovaru == 1) {
 		typ = "zemiaky";
 		jednotkovaCena = maxBio->getPriemCenaZemiakov();
@@ -848,10 +848,10 @@ void Sklad::vyhladajBiofarmara(int typTovaru, int den)
 	}
 }
 
-int Sklad::dajZiskSpolocnosti(int denOd, int denDo)
+double Sklad::dajZiskSpolocnosti(int denOd, int denDo)
 {
 
-	int celkovaCena = 0;
+	double celkovaCena = 0;
 	for (Objednavka *obj : *zoznamZrealizovanychObjednavok_) {
 		if (obj->getDatumDorucenia()->getDen() >= denOd && obj->getDatumDorucenia()->getDen() <= denDo) {
 			celkovaCena += obj->getJednotkovaCena()*obj->getMnozstvoTovaru();
@@ -860,9 +860,9 @@ int Sklad::dajZiskSpolocnosti(int denOd, int denDo)
 	return celkovaCena;
 }
 
-int Sklad::dajNakladySpolocnosti(int denOd, int denDo)
+double Sklad::dajNakladySpolocnosti(int denOd, int denDo)
 {
-	int nakladyZaPolotovary = 0;
+	double nakladyZaPolotovary = 0;
 	for (DodavkaSurovin * dodavka : *zoznamObjednavokPolotovaru_) {
 		if (dodavka->getDatum()->getDen() >= denOd && dodavka->getDatum()->getDen() <= denDo) {
 			nakladyZaPolotovary += dodavka->getCelkovaCena();
@@ -885,6 +885,7 @@ Zakaznik * Sklad::vratZakaznika(string nazov)
 			return zak;
 		}
 	}
+	return nullptr;
 }
 
 

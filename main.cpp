@@ -353,8 +353,8 @@ void main()
 			cin >> denDo;
 
 
-			int prijem = sklad->dajZiskSpolocnosti(denOd, denDo);
-			int naklady = sklad->dajNakladySpolocnosti(denOd, denDo);
+			double prijem = sklad->dajZiskSpolocnosti(denOd, denDo);
+			double naklady = sklad->dajNakladySpolocnosti(denOd, denDo);
 			cout << "CELKOVY PRIJEM: " << prijem << endl;;
 			cout << "CELKOVE NAKLADY: " << naklady << endl;;
 			cout << "CELKOVY ZISK: " << prijem - naklady << endl;
